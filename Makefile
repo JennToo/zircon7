@@ -5,6 +5,9 @@ YOSYS_SCRIPT  := build/ulx3s.ys
 
 SRCS := $(shell find src -name '*.sv')
 
+SIM_DIRS := $(shell ls sim/)
+SIM_TARGETS := $(addprefix sim-,$(SIM_DIRS))
+
 .PHONY: all
 all: $(BITSTREAM)
 
@@ -39,3 +42,8 @@ $(SYNTH_JSON): $(YOSYS_SCRIPT) $(SRCS)
 
 $(YOSYS_SCRIPT): $(SRCS)
 	./scripts/generate_yosys
+
+sim: $(SIM_TARGETS)
+
+$(SIM_TARGETS): sim-%:
+	./scripts/verilate_module $*
