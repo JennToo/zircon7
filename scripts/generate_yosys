@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -ex
+
+TARGET=build/ulx3s.ys
+mkdir -p build
+rm -f $TARGET
+
+for SV in $(find src -name '*.sv')
+do
+    echo "read_verilog -sv $SV" >>$TARGET
+done
+
+echo "synth_ecp5 -noccu2 -nomux -nodram -top top -json build/ulx3s.json" >>$TARGET
