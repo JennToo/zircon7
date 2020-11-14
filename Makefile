@@ -9,7 +9,7 @@ SIM_DIRS := $(shell ls sim/)
 SIM_TARGETS := $(addprefix sim-,$(SIM_DIRS))
 
 .PHONY: all
-all: $(BITSTREAM)
+all: $(BITSTREAM) $(SIM_TARGETS)
 
 .PHONY: clean
 clean:
@@ -46,4 +46,4 @@ $(YOSYS_SCRIPT): $(SRCS)
 sim: $(SIM_TARGETS)
 
 $(SIM_TARGETS): sim-%:
-	./scripts/verilate_module $*
+	+./scripts/verilate_module $*

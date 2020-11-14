@@ -19,12 +19,6 @@ module top
         led[7] = !ftdi_txd;
     end
 
-    uart_driver driver(
-        .receive_data(ftdi_txd),
-        .transmit_data(ftdi_rxd)
-    );
-
-
     wire [7:0] foo [0:11];
     assign foo[0]  = "H";
     assign foo[1]  = "e";
