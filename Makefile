@@ -8,6 +8,8 @@ SRCS := $(shell find src -name '*.sv')
 SIM_DIRS := $(shell ls sim/)
 SIM_TARGETS := $(addprefix sim-,$(SIM_DIRS))
 
+export CXXFLAGS := -I $(abspath sim/common)
+
 .PHONY: all
 all: $(BITSTREAM) $(SIM_TARGETS)
 
