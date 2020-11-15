@@ -1,8 +1,6 @@
-module counter
-#(
+module counter #(
     MAX = 31
-)
-(
+) (
     input logic clk,
     input logic enabled,
     input logic reset,
@@ -10,23 +8,23 @@ module counter
     output logic rollover
 );
 
-localparam WIDTH = $clog2(MAX);
+  localparam WIDTH = $clog2(MAX);
 
-logic [WIDTH:0] value;
+  logic [WIDTH:0] value;
 
-always_ff @(posedge clk) begin
+  always_ff @(posedge clk) begin
     rollover <= 0;
 
     if (reset) begin
-        value <= 0;
+      value <= 0;
     end else if (enabled) begin
-        if (value == MAX) begin
-            value <= 0;
-            rollover <= 1;
-        end else begin
-            value <= value + 1;
-        end
+      if (value == MAX) begin
+        value <= 0;
+        rollover <= 1;
+      end else begin
+        value <= value + 1;
+      end
     end
-end
+  end
 
 endmodule

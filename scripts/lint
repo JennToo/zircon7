@@ -6,6 +6,6 @@ for SRC in $(find src -name '*.sv')
 do
     echo "Verilator check $SRC"
     verilator --lint-only -Wall $VERILATOR_FLAGS "$SRC"
-    echo "svlint check $SRC"
-    svlint "$SRC"
+    echo "verible-verilog lint check $SRC"
+    verible-verilog-lint --rules=-explicit-parameter-storage-type "$SRC"
 done

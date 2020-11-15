@@ -18,3 +18,20 @@ do
         clang-format -i "$SRC"
     fi
 done
+
+for SRC in $(find src -name '*.sv')
+do
+    if [ "$1" = "--check" ]
+    then
+        echo "Checking format for $SRC"
+        verible-verilog-format "$SRC" >/tmp/verible-format-tmp
+        if ! diff "$SRC" /tmp/verible-format-tmp >/dev/null
+        then
+            echo "Error: Would reformat $SRC"
+            exit 1
+        fi
+    else
+        echo "Formatting $SRC"
+        verible-verilog-format --inplace "$SRC"
+    fi
+done
