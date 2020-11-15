@@ -8,8 +8,14 @@ SRCS := $(shell find src -name '*.sv')
 SIM_DIRS := $(filter-out common,$(shell ls sim/))
 SIM_TARGETS := $(addprefix sim-,$(SIM_DIRS))
 
-export CXXFLAGS := -I $(abspath sim/common)
-export VERILATOR_FLAGS := -I$(abspath src/util) -I$(abspath src/uart)
+export CXXFLAGS := -I $(abspath sim/common) -std=c++20
+export CXX := g++-10
+export CC := gcc-10
+export LD := g++-10
+export VERILATOR_FLAGS := \
+	-I$(abspath src/util) \
+	-I$(abspath src/uart) \
+	--compiler clang
 
 .PHONY: all
 all: $(BITSTREAM) $(SIM_TARGETS)
@@ -29,7 +35,7 @@ check: $(BITSTREAM)
 
 .PHONY: format
 format:
-	./scripts/format --check
+	./scripts/format
 
 $(BITSTREAM): $(ROUTED_CONFIG)
 	ecppack $(ROUTED_CONFIG) $@

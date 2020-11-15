@@ -9,6 +9,13 @@ TOPLEVEL_NAME="${TOPLEVEL_FILE_NAME%.sv}"
 
 set -ex
 mkdir -p "$OUTDIR"
-verilator -Wall --Mdir "$OUTDIR" --cc "$TOPLEVEL_FILE" --exe $SIMSRCS
-make -C "$OUTDIR" -f "V${TOPLEVEL_NAME}.mk"
+verilator \
+    -Wall \
+    --Mdir "$OUTDIR" \
+    --cc \
+    "$TOPLEVEL_FILE" \
+    --exe \
+    $VERILATOR_FLAGS \
+    $SIMSRCS
+make -C "$OUTDIR" -f "V${TOPLEVEL_NAME}.mk" CC="$CC" CXX="$CXX" LINK="$LD"
 exec "$OUTDIR/V$TOPLEVEL_NAME"
