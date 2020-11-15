@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+for SRC in $(find src -name '*.sv')
+do
+    echo "Verilator check $SRC"
+    verilator --lint-only -Wall $VERILATOR_FLAGS "$SRC"
+    echo "svlint check $SRC"
+    svlint "$SRC"
+done

@@ -5,10 +5,11 @@ YOSYS_SCRIPT  := build/ulx3s.ys
 
 SRCS := $(shell find src -name '*.sv')
 
-SIM_DIRS := $(shell ls sim/)
+SIM_DIRS := $(filter-out common,$(shell ls sim/))
 SIM_TARGETS := $(addprefix sim-,$(SIM_DIRS))
 
 export CXXFLAGS := -I $(abspath sim/common)
+export VERILATOR_FLAGS := -I$(abspath src/util) -I$(abspath src/uart)
 
 .PHONY: all
 all: $(BITSTREAM) $(SIM_TARGETS)
@@ -22,9 +23,8 @@ prog: $(BITSTREAM)
 	fujprog $(BITSTREAM)
 
 .PHONY: check
-check:
-	svlint $(SRCS)
-	verilator --lint-only -Wall $(SRCS)
+check: $(BITSTREAM)
+	./scripts/lint
 
 $(BITSTREAM): $(ROUTED_CONFIG)
 	ecppack $(ROUTED_CONFIG) $@
