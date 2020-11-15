@@ -25,6 +25,11 @@ prog: $(BITSTREAM)
 .PHONY: check
 check: $(BITSTREAM)
 	./scripts/lint
+	./scripts/format --check
+
+.PHONY: format
+format:
+	./scripts/format --check
 
 $(BITSTREAM): $(ROUTED_CONFIG)
 	ecppack $(ROUTED_CONFIG) $@
@@ -45,6 +50,7 @@ $(SYNTH_JSON): $(YOSYS_SCRIPT) $(SRCS)
 $(YOSYS_SCRIPT): $(SRCS)
 	./scripts/generate_yosys
 
+.PHONY: sim
 sim: $(SIM_TARGETS)
 
 $(SIM_TARGETS): sim-%:

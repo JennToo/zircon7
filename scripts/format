@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+for SRC in $(find sim -name '*.h' -o -name '*.cpp')
+do
+    if [ "$1" = "--check" ]
+    then
+        echo "Checking format for $SRC"
+        clang-format "$SRC" >/tmp/clang-format-tmp
+        if ! diff "$SRC" /tmp/clang-format-tmp >/dev/null
+        then
+            echo "Error: Would reformat $SRC"
+            exit 1
+        fi
+    else
+        echo "Formatting $SRC"
+        clang-format -i "$SRC"
+    fi
+done
