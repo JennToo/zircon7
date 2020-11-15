@@ -1,6 +1,6 @@
 module uart_transmitter #(
-    parameter BAUD_RATE  = 115200,
-    parameter CLOCK_RATE = 25_000_000
+    parameter integer BAUD_RATE  = 115200,
+    parameter integer CLOCK_RATE = 25_000_000
 ) (
     input var clk,
     input var have_new_data,
@@ -8,8 +8,8 @@ module uart_transmitter #(
     output var uart_tx,
     output var ready_for_new_data
 );
-  localparam ClockDivider = CLOCK_RATE / BAUD_RATE;
-  localparam DividerSize = $clog2(ClockDivider);
+  localparam integer ClockDivider = CLOCK_RATE / BAUD_RATE;
+  localparam integer DividerSize = $clog2(ClockDivider);
   logic [DividerSize-1:0] divider = DividerSize'(ClockDivider - 1);
 
   logic [10:0] data = 11'b00000000001;

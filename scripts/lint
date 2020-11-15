@@ -7,5 +7,5 @@ do
     echo "Verilator check $SRC"
     verilator --lint-only -Wall $VERILATOR_FLAGS "$SRC"
     echo "verible-verilog lint check $SRC"
-    verible-verilog-lint --rules=-explicit-parameter-storage-type "$SRC"
+    verible-verilog-lint "$SRC"
 done
