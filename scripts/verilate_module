@@ -3,7 +3,7 @@
 SIMNAME="$1"
 TOPLEVEL_FILE="$(readlink -f "sim/$SIMNAME/"*.sv)"
 SIMSRCS="$(find "$(readlink -e "sim/$SIMNAME")" -name '*.cpp')"
-OUTDIR="build/$SIMNAME"
+OUTDIR="build/sim/$SIMNAME"
 TOPLEVEL_FILE_NAME="${TOPLEVEL_FILE##*/}"
 TOPLEVEL_NAME="${TOPLEVEL_FILE_NAME%.sv}"
 

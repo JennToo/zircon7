@@ -5,10 +5,15 @@ YOSYS_SCRIPT  := build/ulx3s.ys
 
 SRCS := $(shell find src -name '*.sv')
 
+COMMON_LIB_SRCS := $(shell find sim/common -name '*.cpp')
+COMMON_LIB_OBJS := $(COMMON_LIB_SRCS:sim/common/%.cpp=build/common/%.o)
+COMMON_LIB_ARCH := build/common/common.a
+
 SIM_DIRS := $(filter-out common,$(shell ls sim/))
 SIM_TARGETS := $(addprefix sim-,$(SIM_DIRS))
 
-export CXXFLAGS := -I $(abspath sim/common) -std=c++20
+export CXXFLAGS := -I $(abspath sim/common) -std=c++20 -flto
+export LDFLAGS := -flto $(abspath $(COMMON_LIB_ARCH))
 export CXX := g++-10
 export CC := gcc-10
 export LD := g++-10
@@ -37,6 +42,9 @@ check: $(BITSTREAM)
 format:
 	./scripts/format
 
+.PHONY: sim
+sim: $(SIM_TARGETS)
+
 $(BITSTREAM): $(ROUTED_CONFIG)
 	ecppack $(ROUTED_CONFIG) $@
 
@@ -56,8 +64,13 @@ $(SYNTH_JSON): $(YOSYS_SCRIPT) $(SRCS)
 $(YOSYS_SCRIPT): $(SRCS)
 	./scripts/generate_yosys
 
-.PHONY: sim
-sim: $(SIM_TARGETS)
-
-$(SIM_TARGETS): sim-%:
+$(SIM_TARGETS): sim-%: $(COMMON_LIB_ARCH)
 	+./scripts/verilate_module $*
+
+$(COMMON_LIB_OBJS): build/common/%.o: sim/common/%.cpp
+	mkdir -p $(@D)
+	rm -rf build/sim
+	$(CXX) $$(pkg-config --cflags verilator) $(CXXFLAGS) -o $@ -c $<
+
+$(COMMON_LIB_ARCH): $(COMMON_LIB_OBJS)
+	ar rcs $@ $^
