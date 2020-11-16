@@ -8,16 +8,16 @@ SCENARIO("Rolling counter") {
     counter.reset = 1;
     counter.enabled = 1;
     cycle(counter);
-    REQUIRE(counter.counter__DOT__value == 0);
+    REQUIRE(counter.value == 0);
     REQUIRE_FALSE(counter.rollover);
 
     counter.reset = 0;
     cycle(counter);
-    REQUIRE(counter.counter__DOT__value == 1);
+    REQUIRE(counter.value == 1);
     REQUIRE_FALSE(counter.rollover);
 
     run_until(
-        counter, [&]() { return counter.counter__DOT__value == 31; }, 100);
+        counter, [&]() { return counter.value == 31; }, 100);
     REQUIRE_FALSE(counter.rollover);
 
     WHEN("The counter is reset") {

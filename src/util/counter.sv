@@ -1,17 +1,14 @@
 module counter #(
-    parameter integer MAX = 31
+    parameter integer MAX   = 31,
+    parameter integer WIDTH = $clog2(MAX)
 ) (
     input logic clk,
     input logic enabled,
     input logic reset,
 
-    output logic rollover
+    output logic rollover,
+    output logic [WIDTH-1:0] value
 );
-
-  localparam integer WIDTH = $clog2(MAX);
-
-  logic [WIDTH-1:0] value;
-
   always_ff @(posedge clk) begin
     rollover <= 0;
 
@@ -26,5 +23,4 @@ module counter #(
       end
     end
   end
-
 endmodule
