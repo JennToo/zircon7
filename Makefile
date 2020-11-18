@@ -19,8 +19,7 @@ export CC := gcc-10
 export LD := g++-10
 export VERILATOR_FLAGS := \
 	-I$(abspath src/util) \
-	-I$(abspath src/uart) \
-	--compiler clang
+	-I$(abspath src/uart)
 
 .PHONY: all
 all: $(BITSTREAM) $(SIM_TARGETS)
