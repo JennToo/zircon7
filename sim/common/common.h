@@ -6,6 +6,7 @@
 template <typename T> concept Clockable = requires(T a) {
   { a.clk }
   ->std::convertible_to<bool>;
+  {a.eval()};
 };
 
 template <typename T> concept BooleanFunction = requires(T a) {
