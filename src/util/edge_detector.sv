@@ -1,5 +1,5 @@
 module edge_detector #(
-    parameter integer HOLD_COUNT = 32
+    parameter integer HOLD_COUNT = 31
 ) (
     input logic clk,
     input logic reset,
@@ -8,40 +8,29 @@ module edge_detector #(
     output logic rising,
     output logic falling
 );
-
+  localparam integer CounterWidth = $clog2(HOLD_COUNT) + 1;
   logic last_value;
-  logic hold_counter_enable;
-
-  wire hold_counter_reset;
-  wire hold_counter_rollover;
-  wire [$clog2(HOLD_COUNT - 1) - 1:0] _unused_hold_counter_value;
-
-  counter #(
-      .MAX(HOLD_COUNT - 1)
-  ) hold_counter (
-      .clk(clk),
-      .enabled(hold_counter_enable),
-      .reset(hold_counter_reset),
-      .rollover(hold_counter_rollover),
-      .value(_unused_hold_counter_value)
-  );
-
-  assign hold_counter_reset = (last_value != signal);
+  logic [CounterWidth-1:0] counter;
 
   always_ff @(posedge clk) begin
     rising  <= 0;
     falling <= 0;
-    if (hold_counter_rollover) begin
-      hold_counter_enable <= 0;
-      if (signal) rising <= 1;
-      else falling <= 1;
-    end
     if (last_value != signal) begin
-      hold_counter_enable <= 1;
+      counter <= 0;
+    end
+    if (counter != CounterWidth'(HOLD_COUNT)) begin
+      counter <= counter + 1;
+    end
+    if (counter == CounterWidth'(HOLD_COUNT - 1)) begin
+      if (signal == 1) begin
+        rising <= 1;
+      end else begin
+        falling <= 1;
+      end
     end
     if (reset) begin
-      hold_counter_enable <= 0;
-      rising <= 0;
+      counter <= CounterWidth'(HOLD_COUNT);
+      rising  <= 0;
       falling <= 0;
     end
     last_value <= signal;
