@@ -18,8 +18,7 @@ SCENARIO("Edge detection") {
     no_edge_detected(detector);
 
     WHEN("The signal doesn't change for many cycles") {
-      cycle(detector, 100);
-      // TODO: Attach some kind of invariant checker
+      cycle(detector, 100, {no_edge_detected});
 
       THEN("No signal is detected") { no_edge_detected(detector); }
     }
