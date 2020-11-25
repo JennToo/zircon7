@@ -28,7 +28,7 @@ void write_char(augmented_module<Vuart_receiver> &receiver, char value,
 
 SCENARIO("UART Receiver") {
   GIVEN("A UART Receiver") {
-    augmented_module<Vuart_receiver> receiver;
+    augmented_module<Vuart_receiver> receiver("build/sim/uart_receiver");
     receiver->uart_rx = 1;
     receiver->reset = 1;
     receiver.cycle();

@@ -3,7 +3,7 @@
 
 SCENARIO("Rolling counter") {
   GIVEN("A counter nearing rollover") {
-    augmented_module<Vcounter> counter;
+    augmented_module<Vcounter> counter("build/sim/counter");
 
     counter->reset = 1;
     counter->enabled = 1;

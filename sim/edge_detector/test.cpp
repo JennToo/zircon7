@@ -9,7 +9,7 @@ void no_edge_detected(const Vedge_detector &detector) {
 
 SCENARIO("Edge detection") {
   GIVEN("An edge detector") {
-    augmented_module<Vedge_detector> detector;
+    augmented_module<Vedge_detector> detector("build/sim/edge_detector");
 
     detector->reset = 1;
     detector->signal = 0;

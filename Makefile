@@ -18,6 +18,7 @@ export CXX := g++-10
 export CC := gcc-10
 export LD := g++-10
 export VERILATOR_FLAGS := \
+	--trace \
 	-I$(abspath src/util) \
 	-I$(abspath src/uart)
 
