@@ -20,24 +20,28 @@ using Invariants = std::vector<std::function<void(const T &)>>;
 
 template <Clockable ModuleT> class augmented_module {
 public:
-  void cycle(unsigned count = 1, const Invariants<ModuleT> &invariants = {}) {
-    // TODO: Uh, actually evaluate the invariants....
+  void cycle(unsigned count = 1,
+             const Invariants<ModuleT> &run_invariants = {}) {
     while (count-- > 0) {
       module.clk = 0;
       module.eval();
       module.clk = 1;
       module.eval();
+
+      for (const auto &invariant : run_invariants) {
+        invariant(module);
+      }
     }
   }
 
   template <BooleanFunction Callable>
   unsigned run_until(Callable condition, unsigned max_cycles = 1,
-                     const Invariants<ModuleT> &invariants = {}) {
+                     const Invariants<ModuleT> &run_invariants = {}) {
     for (unsigned i = 0; i < max_cycles; ++i) {
       if (condition()) {
         return i;
       }
-      cycle(1, invariants);
+      cycle(1, run_invariants);
     }
 
     REQUIRE(false);
