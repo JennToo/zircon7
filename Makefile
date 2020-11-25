@@ -12,8 +12,8 @@ COMMON_LIB_ARCH := build/common/common.a
 SIM_DIRS := $(filter-out common,$(shell ls sim/))
 SIM_TARGETS := $(addprefix sim-,$(SIM_DIRS))
 
-export CXXFLAGS := -I $(abspath sim/common) -std=c++20 -flto
-export LDFLAGS := -flto $(abspath $(COMMON_LIB_ARCH))
+export CXXFLAGS := -I $(abspath sim/common) -std=c++20 -flto -ggdb3
+export LDFLAGS := -flto $(abspath $(COMMON_LIB_ARCH)) -ggdb3
 export CXX := g++-10
 export CC := gcc-10
 export LD := g++-10
