@@ -16,9 +16,12 @@ module edge_detector #(
     rising  <= 0;
     falling <= 0;
     if (last_value != signal) begin
-      counter <= 0;
-    end
-    if (counter != CounterWidth'(HOLD_COUNT)) begin
+      if (counter == CounterWidth'(HOLD_COUNT)) begin
+        counter <= 0;
+      end else begin
+        counter <= CounterWidth'(HOLD_COUNT);
+      end
+    end else if (counter != CounterWidth'(HOLD_COUNT)) begin
       counter <= counter + 1;
     end
     if (counter == CounterWidth'(HOLD_COUNT - 1)) begin
