@@ -18,27 +18,37 @@ template <typename T> concept BooleanFunction = requires(T a) {
 template <typename T>
 using Invariants = std::vector<std::function<void(const T &)>>;
 
-template <Clockable T>
-void cycle(T &instance, unsigned count = 1,
-           const Invariants<T> &invariants = {}) {
-  while (count-- > 0) {
-    instance.clk = 0;
-    instance.eval();
-    instance.clk = 1;
-    instance.eval();
-  }
-}
-
-template <Clockable T, BooleanFunction Callable>
-unsigned run_until(T &instance, Callable condition, unsigned max_cycles = 1,
-                   const Invariants<T> &invariants = {}) {
-  for (unsigned i = 0; i < max_cycles; ++i) {
-    if (condition()) {
-      return i;
+template <Clockable ModuleT> class augmented_module {
+public:
+  void cycle(unsigned count = 1, const Invariants<ModuleT> &invariants = {}) {
+    // TODO: Uh, actually evaluate the invariants....
+    while (count-- > 0) {
+      module.clk = 0;
+      module.eval();
+      module.clk = 1;
+      module.eval();
     }
-    cycle(instance, 1, invariants);
   }
 
-  REQUIRE(false);
-  return -1;
-}
+  template <BooleanFunction Callable>
+  unsigned run_until(Callable condition, unsigned max_cycles = 1,
+                     const Invariants<ModuleT> &invariants = {}) {
+    for (unsigned i = 0; i < max_cycles; ++i) {
+      if (condition()) {
+        return i;
+      }
+      cycle(1, invariants);
+    }
+
+    REQUIRE(false);
+    return -1;
+  }
+
+  ModuleT *operator->() { return &module; }
+  const ModuleT *operator->() const { return &module; }
+  ModuleT &operator*() { return module; }
+  const ModuleT &operator*() const { return module; }
+
+private:
+  ModuleT module;
+};
